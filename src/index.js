@@ -6,10 +6,10 @@ import './index.css';
 
 
 import reactCSS from 'reactcss'
-import { SketchPicker } from 'react-color'
+import { CompactPicker } from 'react-color'
 'use strict'
 
-class SketchExample extends React.Component {
+class CompactExample extends React.Component {
   state = {
     displayColorPicker: false,
     color: {
@@ -71,7 +71,7 @@ class SketchExample extends React.Component {
         </div>
         { this.state.displayColorPicker ? <div style={ styles.popover }>
           <div style={ styles.cover } onClick={ this.handleClose }/>
-          <SketchPicker color={ this.state.color } onChange={ this.handleChange } />
+          <CompactPicker color={ this.state.color } onChange={ this.handleChange } />
         </div> : null }
 
       </div>
@@ -79,7 +79,7 @@ class SketchExample extends React.Component {
   }
 }
 
-export default SketchExample
+export default CompactExample
 
 // class ButtonExample extends React.Component {
 //   state = {
@@ -154,7 +154,7 @@ class Board extends React.Component {
       // </div>
       <div>
       <div>
-        <SketchExample/>
+        <CompactExample/>
       </div>
       <div className="notes">
       Hello
