@@ -1,9 +1,8 @@
-
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-
+import EditableLabel from 'react-inline-editing';
+import PropTypes from 'prop-types';
 
 import reactCSS from 'reactcss'
 import { CompactPicker } from 'react-color'
@@ -81,45 +80,6 @@ class CompactExample extends React.Component {
 
 export default CompactExample
 
-// class ButtonExample extends React.Component {
-//   state = {
-//     displayColorPicker: false,
-//   };
-//
-//   handleClick = () => {
-//     this.setState({ displayColorPicker: !this.state.displayColorPicker })
-//   };
-//
-//   handleClose = () => {
-//     this.setState({ displayColorPicker: false })
-//   };
-//
-//   render() {
-//     const popover = {
-//       position: 'absolute',
-//       zIndex: '2',
-//     }
-//     const cover = {
-//       position: 'fixed',
-//       top: '0px',
-//       right: '0px',
-//       bottom: '0px',
-//       left: '0px',
-//     }
-//     return (
-//       <div>
-//         <button className = "color" onClick={ this.handleClick }>Pick Color</button>
-//         { this.state.displayColorPicker ? <div style={ popover }>
-//           <div style={ cover } onClick={ this.handleClose }/>
-//           <ChromePicker />
-//         </div> : null }
-//       </div>
-//     )
-//   }
-// }
-
-// export default ButtonExample
-
 class Square extends React.Component {
   state = {value:this.props.value};
   render() {
@@ -152,20 +112,19 @@ class Board extends React.Component {
       //   Hello
       //   </div>
       // </div>
-      <div>
-      <div>
-        <CompactExample/>
-      </div>
-      <div className="notes">
-      Hello
-      </div>
+      <div className="row">
+        <div className="color">
+          <CompactExample/>
+        </div>
+        <div className="note">
+          <Label/>
+        </div>
       </div>
     );
   }
 
 
   render() {
-    const status = 'Next player: X';
 
     return (
       // <div>
@@ -184,7 +143,17 @@ class Board extends React.Component {
       //   </div>
       // </div>
       <div>
-        <div className="status">{status}</div>
+      <div className="board-row">
+      <div className="row">
+        <div className="color text">
+          Color
+         </div>
+        <div className="note text">
+          Notes
+        </div>
+      </div>
+      </div>
+
         <div className="board-row">
           {this.renderSquare(0)}
         </div>
@@ -202,31 +171,50 @@ class Board extends React.Component {
   }
 }
 
+class Label extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { items: [], text: '' };
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
 
-class Game extends React.Component {
   render() {
     return (
-      <div className="game">
-        <div className="game-board">
-          <Board />
-        </div>
-        <div className="game-info">
-          <div>{/* status */}</div>
-          <ol>{/* TODO */}</ol>
-        </div>
+      <div>
+          <input
+            id="new-todo"
+            onChange={this.handleChange}
+            value={this.state.text}
+          />
+
       </div>
     );
+  }
+
+  handleChange(e) {
+    this.setState({ text: e.target.value });
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    if (!this.state.text.length) {
+      return;
+    }
+    const newItem = {
+      text: this.state.text,
+      id: Date.now()
+    };
+    this.setState(prevState => ({
+      items: prevState.items.concat(newItem),
+      text: ''
+    }));
   }
 }
 
 // ========================================
 
 ReactDOM.render(
-  <Game />,
+  <Board />,
   document.getElementById('root')
 );
-
-// ReactDOM.render(
-//   <ButtonExample />,
-//   document.getElementById('root')
-// )
