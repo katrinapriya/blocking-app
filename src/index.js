@@ -28,6 +28,7 @@ class CompactExample extends React.Component {
   };
 
   handleChange = (color) => {
+    this.props.handleChange(color);
     this.setState({ color: color.rgb })
   };
 
@@ -92,29 +93,33 @@ class Square extends React.Component {
 
 class Board extends React.Component {
   state = {
-      squares: Array(4).fill(null),
+      colors: {},
+      // squares: Array(4).fill(null),
+      // currentcolor: "rgb(0, 0, 255, 1)",
+      currentColorIndex: undefined,
+      cellColorIndex: undefined
   };
 
+  handleColorChange = (i, color) => {
+    let colors = this.state.colors;
+    colors[i] = color;
 
-  handleClick(i) {
-    const squares = this.state.squares.slice();
-    squares[i] = 'X';
-    this.setState({squares: squares});
+    this.setState({ colors: colors });
+  }
+
+  handleClickRow(i) {
+    //this.setState({squares: squares});
+    // document.getElementById("color-changer").style.color = this.state.currentcolor;
+    this.setState({currentColorIndex: i})
   }
 
   renderSquare(i) {
     return (
-      // <div>
-      //   <Square value={this.state.squares[i]}
-      //   onClick = {() => this.handleClick(i)}
-      //   />
-      //   <div className="notes">
-      //   Hello
-      //   </div>
-      // </div>
       <div className="row">
         <div className="color">
-          <CompactExample/>
+          <CompactExample handleChange={(color) => {
+            this.handleColorChange(i, color);
+          }}/>
         </div>
         <div className="note">
           <Label/>
@@ -125,47 +130,53 @@ class Board extends React.Component {
 
 
   render() {
+    let {
+      colors,
+      currentColorIndex,
+      cellColorIndex,
+    } = this.state;
 
     return (
-      // <div>
-      //   <div className="status">{status}</div>
-      //   <div className="board-row">
-      //     {this.renderSquare(0)}
-      //   </div>
-      //   <div className="board-row">
-      //     {this.renderSquare(1)}
-      //   </div>
-      //   <div className="board-row">
-      //     {this.renderSquare(2)}
-      //   </div>
-      //   <div className="board-row">
-      //     {this.renderSquare(3)}
-      //   </div>
-      // </div>
       <div>
-      <div className="board-row">
-      <div className="row">
-        <div className="color text">
-          Color
-         </div>
-        <div className="note text">
-          Notes
-        </div>
-      </div>
-      </div>
-
         <div className="board-row">
+          <div className="row">
+            <div className="color text">
+              Color
+             </div>
+            <div className="note text">
+              Notes
+            </div>
+          </div>
+        </div>
+        <div className="board-row" onClick={() => {this.handleClickRow(0)}}>
           {this.renderSquare(0)}
         </div>
-        <div className="board-row">
+        <div className="board-row" onClick={() => {this.handleClickRow(1)}}>
           {this.renderSquare(1)}
         </div>
-        <div className="board-row">
+        <div className="board-row" onClick={() => {this.handleClickRow(2)}}>
           {this.renderSquare(2)}
         </div>
-        <div className="board-row">
+        <div className="board-row" onClick={() => {this.handleClickRow(3)}}>
           {this.renderSquare(3)}
         </div>
+        Current color:
+        <div
+          className="color-changer"
+          style={{backgroundColor: colors[currentColorIndex] && colors[currentColorIndex].hex}}
+        ></div>
+        Sample cell:
+        <div
+          className="color-changer"
+          onClick={() => {
+            // We want to take:
+            //   currentColorIndex
+            // And apply it here:
+            // state = currentColorIndex
+            this.setState({cellColorIndex: currentColorIndex})
+          }}
+          style={{backgroundColor: colors[cellColorIndex] && colors[cellColorIndex].hex}}
+        ></div>
       </div>
     );
   }
